@@ -21,15 +21,23 @@ const FormSection = ({
 }) => {
   const [showFieldModal, setShowFieldModal] = useState(false);
 
+
+  const handleUpdateField = (fieldId, newValue) => {
+    onUpdateField(fieldId, newValue); // Correctly update the state with full value
+  };
+  
   const renderField = (field) => {
+    
     const props = {
       field,
       value: formData?.[field.id] || "", 
-      onChange: (value) => onUpdateField(field.id, value),
+      // onChange: (value) => onUpdateField(field.id, value),
+      onChange: (value) => handleUpdateField(field.id, value),
       error: errors?.[field.id] || null, 
       onRemove: () => onRemoveField(field.id),
     };
-  
+
+
     switch (field.type) {
       case FIELD_TYPES.TEXT:
         return <TextField key={field.id} {...props} />;
@@ -53,14 +61,14 @@ const FormSection = ({
   
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <div className="flex justify-between items-center mb-6">
+    <div className="p-6 bg-white rounded-lg shadow-md">
+      <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-800">{section.title}</h2>
         <div className="flex gap-2">
           <button
             type="button"
             onClick={() => setShowFieldModal(true)}
-            className="flex items-center gap-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+            className="flex items-center gap-1 px-3 py-1 text-white transition-colors bg-blue-500 rounded-md hover:bg-blue-600"
           >
             <Plus className="w-4 h-4" />
             Add Field
@@ -68,7 +76,7 @@ const FormSection = ({
           <button
             type="button"
             onClick={onRemoveSection}
-            className="text-red-500 hover:text-red-700 transition-colors"
+            className="text-red-500 transition-colors hover:text-red-700"
           >
             <Trash2 className="w-5 h-5" />
           </button>
@@ -80,9 +88,9 @@ const FormSection = ({
       </div>
 
       {showFieldModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-96">
-            <h3 className="text-lg font-semibold mb-4">Select Field Type</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="p-6 bg-white rounded-lg w-96">
+            <h3 className="mb-4 text-lg font-semibold">Select Field Type</h3>
             <div className="grid grid-cols-2 gap-4">
               {Object.values(FIELD_TYPES).map(type => (
                 <button
@@ -91,7 +99,7 @@ const FormSection = ({
                     onAddField(type);
                     setShowFieldModal(false);
                   }}
-                  className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md capitalize transition-colors"
+                  className="px-4 py-2 capitalize transition-colors bg-gray-100 rounded-md hover:bg-gray-200"
                 >
                   {type}
                 </button>
@@ -99,7 +107,7 @@ const FormSection = ({
             </div>
             <button
               onClick={() => setShowFieldModal(false)}
-              className="mt-4 w-full px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
+              className="w-full px-4 py-2 mt-4 transition-colors bg-gray-200 rounded-md hover:bg-gray-300"
             >
               Cancel
             </button>
